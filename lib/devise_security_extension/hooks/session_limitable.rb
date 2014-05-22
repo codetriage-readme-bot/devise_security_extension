@@ -6,8 +6,9 @@ Warden::Manager.after_set_user :except => :fetch do |record, warden, options|
   scope = options[:scope]
   if record.respond_to?(:archive_unique_session!) && warden.authenticated?(options[:scope])
     unique_session_id = Devise.friendly_token
-    warden.session(options[:scope])['unique_session_id'] = unique_session_id
-    unless record.archive_unique_session!(unique_session_id)
+    if record.archive_unique_session!(unique_session_id)
+      warden.session(options[:scope])['unique_session_id'] = unique_session_id
+    else
       warden.logout(scope)
       throw :warden, :scope => scope, :message => :session_limited
     end
@@ -19,7 +20,7 @@ end
 # If so, the old account is logged out and redirected to the sign in page on the next request.
 Warden::Manager.after_set_user :only => :fetch do |record, warden, options|
   scope = options[:scope]
-  if record.respond_to?(:accept_session?) && warden.authenticated?(scope) && options[:store] != false
+  if record.respond_to?(:accept_session?) && warden.authenticated?(scope) && options[:store] != false && warden.session(scope)['unique_session_id'].present?
     if record.accept_session?(warden.session(scope)['unique_session_id'])
       record.archive_unique_session(warden.session(scope)['unique_session_id'])
     else
@@ -29,9 +30,10 @@ Warden::Manager.after_set_user :only => :fetch do |record, warden, options|
   end
 end
 
+# Destroy session
 Warden::Manager.before_logout do |record, warden, options|
   scope = options[:scope]
-  if record.respond_to?(:accept_session?) && record.accept_session?(warden.session(scope)['unique_session_id'])
+  if record.respond_to?(:accept_session?) && warden.session(scope)['unique_session_id'].present? && record.accept_session?(warden.session(scope)['unique_session_id'])
     record.un_archive_unique_session(warden.session(scope)['unique_session_id'])
   end
 end
