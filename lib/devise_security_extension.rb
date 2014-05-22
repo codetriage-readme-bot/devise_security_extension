@@ -6,6 +6,15 @@ require 'active_support/concern'
 require 'devise'
 
 module Devise
+  # How many active sessions
+  mattr_accessor :default_sessions_limit
+  @@default_sessions_limit = 5
+
+  mattr_accessor :default_sessions_reject_on_limit
+  @@default_sessions_reject_on_limit = true
+
+  mattr_accessor :default_sessions_expiration
+  @@default_sessions_expiration = 30.minutes
 
   # Should the password expire (e.g 3.months)
   mattr_accessor :expire_password_after

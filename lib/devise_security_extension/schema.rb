@@ -54,6 +54,9 @@ module DeviseSecurityExtension
     #
     def session_limitable
       apply_devise_schema :unique_session_id, String, :limit => 20
+      apply_devise_schema :session_limitable_id, Integer, :null => false
+      apply_devise_schema :session_limitable_type, String, :null => false
+      apply_devise_schema :last_request_at, DateTime
     end
   end
 end
