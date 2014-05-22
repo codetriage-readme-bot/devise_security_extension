@@ -24,6 +24,7 @@ Warden::Manager.after_set_user :only => :fetch do |record, warden, options|
     if record.accept_session?(warden.session(scope)['unique_session_id'])
       record.archive_unique_session(warden.session(scope)['unique_session_id'])
     else
+      warden.session(options[:scope]).delete 'unique_session_id'
       warden.logout(scope)
       throw :warden, :scope => scope, :message => :session_limited
     end

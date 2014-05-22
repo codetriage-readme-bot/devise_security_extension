@@ -23,7 +23,7 @@ module Devise
       end
 
       def archive_unique_session!(unique_session_id)
-        if !sessions_on_limit? || (!reject_session_on_limit? && allow_create_session?)
+        if !sessions_on_limit? || (!reject_session_on_limit? && allow_create_session?) || sessions_allowed_count == 0
           archive_unique_session(unique_session_id)
         end
       end
@@ -34,11 +34,11 @@ module Devise
       end
 
       def allow_create_session?
-        self.devise_sessions.where('last_request_at <= ?', (Time.now - session_expiration)).destroy_all
+        reject_session_on_limit? ? self.devise_sessions.where('last_request_at <= ?', (Time.now - session_expiration)).destroy_all : self.devise_sessions.order(:id).reverse_order.offset(sessions_allowed_count).delete_all
       end
 
       def reject_session_on_limit?
-        self.respond_to?(:sessions_reject_on_limit) ? self.sessions_reject_on_limit : self.class.default_sessions_reject_on_limit
+        self.respond_to?(:sessions_reject_on_limit) && self.sessions_reject_on_limit.present? ? self.sessions_reject_on_limit : self.class.default_sessions_reject_on_limit
       end
 
       def sessions_on_limit?
@@ -46,7 +46,7 @@ module Devise
       end
 
       def sessions_allowed_count
-        if self.respond_to?(:sessions_count_limit)
+        if self.respond_to?(:sessions_count_limit) && self.sessions_count_limit.present?
           self.sessions_count_limit.to_i
         else
           self.class.default_sessions_limit.to_i
@@ -58,7 +58,7 @@ module Devise
       end
 
       def session_expiration
-        self.respond_to?(:sessions_expiration) ? self.sessions_expiration.to_i : self.class.default_sessions_expiration.to_i
+        self.respond_to?(:sessions_expiration) && self.sessions_expiration.present? ? self.sessions_expiration.to_i : self.class.default_sessions_expiration.to_i
       end
 
       module ClassMethods
