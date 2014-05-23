@@ -8,8 +8,12 @@ module DeviseSecurityExtension
 
       def add_configs
         inject_into_file "config/initializers/devise.rb", "\n  # ==> Security Extension\n  # Configure security extension for devise\n\n" +
-        "  # How many active default sessions \n" +
-        "  # config.default_sessions_count = 5\n\n" +
+        "  # How many active sessions \n" +
+        "  # config.default_sessions_limit = 1\n\n" +
+        "  # If session is full reject incoming authentication \n" +
+        "  # config.default_sessions_reject_on_limit = true\n\n" +
+        "  # Period of time before a session will expire for inactive \n" +
+        "  # config.default_sessions_expiration = 30.minutes\n\n" +
         "  # Should the password expire (e.g 3.months)\n" +
         "  # config.expire_password_after = false\n\n" +
         "  # Need 1 char of A-Z, a-z and 0-9\n" +
