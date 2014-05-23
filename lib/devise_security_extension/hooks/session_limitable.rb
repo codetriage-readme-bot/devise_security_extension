@@ -23,11 +23,15 @@ Warden::Manager.after_set_user :only => :fetch do |record, warden, options|
   if record.respond_to?(:accept_session?) && warden.authenticated?(scope) && options[:store] != false && warden.session(scope)['unique_session_id'].present?
     if record.accept_session?(warden.session(scope)['unique_session_id'])
       record.archive_unique_session(warden.session(scope)['unique_session_id'])
+      false
     else
-      warden.session(options[:scope]).delete 'unique_session_id'
+      warden.session(scope).delete 'unique_session_id'
       warden.logout(scope)
       throw :warden, :scope => scope, :message => :session_limited
     end
+  else
+    warden.logout(scope)
+    throw :warden, :scope => scope, :message => :session_limited
   end
 end
 
@@ -36,5 +40,7 @@ Warden::Manager.before_logout do |record, warden, options|
   scope = options[:scope]
   if record.respond_to?(:accept_session?) && warden.session(scope)['unique_session_id'].present? && record.accept_session?(warden.session(scope)['unique_session_id'])
     record.un_archive_unique_session(warden.session(scope)['unique_session_id'])
+  elsif warden.session(scope)['unique_session_id'].present?
+    warden.session(scope).delete 'unique_session_id'
   end
 end
