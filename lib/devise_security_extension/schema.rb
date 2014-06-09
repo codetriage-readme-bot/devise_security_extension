@@ -42,13 +42,13 @@ module DeviseSecurityExtension
     # Examples
     #
     # # For a new resource migration:
-    # create_table :the_resources do |t|
+    # create_table :devise_sessions do |t|
     #   t.session_limitable
     # ...
     # end
     #
     # # or if the resource's table already exists, define a migration and put this in:
-    # change_table :the_resources do |t|
+    # change_table :devise_sessions do |t|
     #   t.string :unique_session_id, :limit => 20
     # end
     #
@@ -57,6 +57,25 @@ module DeviseSecurityExtension
       apply_devise_schema :session_limitable_id, Integer, :null => false
       apply_devise_schema :session_limitable_type, String, :null => false
       apply_devise_schema :last_request_at, DateTime
+    end
+
+    # Add session_loggable columns
+    #
+    # Examples
+    #
+    # create_table :devise_session_logs do
+    #   t.session_loggable
+    # end
+    # add_index :devise_session_logs, [:ip_address, :latitude, :longitude], :name => :index_devise_session_log
+    #
+    def session_loggable
+      apply_devise_schema :unique_auth_token_id, String, :limit => 20, :null => false
+      apply_devise_schema :unique_auth_token_valid, Boolean, :default => true, :null => false
+      apply_devise_schema :last_accessed_at, DateTime, :null => false
+      apply_devise_schema :ip_address, String, :null => false
+      apply_devise_schema :user_agent, Text, :null => false
+      apply_devise_schema :session_loggable_id, Integer, :null => false
+      apply_devise_schema :session_loggable_type, String, :null => false
     end
   end
 end

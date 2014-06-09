@@ -15,11 +15,8 @@ module Devise
       end
 
       def un_archive_unique_session(unique_session_id)
-        self.devise_sessions.where(:unique_session_id => unique_session_id).delete_all
-      end
-
-      def accept_session?(unique_session_id)
-        self.devise_sessions.where(:unique_session_id => unique_session_id).count > 0
+        unique_session = self.devise_sessions.where(:unique_session_id => unique_session_id)
+        unique_session.delete_all if unique_session.present?
       end
 
       def archive_unique_session!(unique_session_id)
@@ -28,6 +25,16 @@ module Devise
         end
       end
 
+      def update_last_request_at(unique_session_id)
+        unique_session = self.devise_sessions.where(:unique_session_id => unique_session_id).first
+        unique_session.update_attributes(:last_request_at => Time.now) if unique_session.present?
+      end
+
+      def accept_unique_session?(unique_session_id)
+        self.devise_sessions.where(:unique_session_id => unique_session_id).count > 0
+      end
+
+      private
       def archive_unique_session(unique_session_id)
         unique_session = self.devise_sessions.where(:unique_session_id => unique_session_id).first_or_create
         unique_session.update_attributes(:last_request_at => Time.now)

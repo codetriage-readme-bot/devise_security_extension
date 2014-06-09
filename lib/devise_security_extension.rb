@@ -96,6 +96,7 @@ Devise.add_module :password_archivable, :model => 'devise_security_extension/mod
 Devise.add_module :session_limitable, :model => 'devise_security_extension/models/session_limitable'
 Devise.add_module :expirable, :model => 'devise_security_extension/models/expirable'
 Devise.add_module :security_questionable, :model => 'devise_security_extension/models/security_questionable'
+Devise.add_module :session_loggable, :model => 'devise_security_extension/models/session_loggable'
 
 # requires
 require 'devise_security_extension/routes'

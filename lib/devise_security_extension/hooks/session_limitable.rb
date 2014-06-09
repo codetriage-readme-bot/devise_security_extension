@@ -21,27 +21,21 @@ end
 Warden::Manager.after_set_user :only => :fetch do |record, warden, options|
   scope = options[:scope]
   session =  warden.request.session["warden.user.#{scope}.session"]
-  if record.respond_to?(:accept_session?) && warden.authenticated?(scope) && options[:store] != false && session['unique_session_id'].present?
-    if record.accept_session?(session['unique_session_id'])
-      record.archive_unique_session(session['unique_session_id'])
+  if record.respond_to?(:accept_unique_session?) && warden.authenticated?(scope) && options[:store] != false && session['unique_session_id'].present?
+    if record.accept_unique_session?(session['unique_session_id'])
+      record.update_last_request_at(session['unique_session_id'])
     else
-      session.delete 'unique_session_id'
       warden.logout(scope)
       throw :warden, :scope => scope, :message => :session_limited
     end
-  else
-    warden.logout(scope)
-    throw :warden, :scope => scope, :message => :session_limited
   end
 end
 
 # Destroy session
 Warden::Manager.before_logout do |record, warden, options|
-  scope = options[:scope]
-  session =  warden.request.session["warden.user.#{scope}.session"]
-  if record.respond_to?(:accept_session?) && session['unique_session_id'].present? && record.accept_session?(session['unique_session_id'])
+  session =  warden.request.session["warden.user.#{options[:scope]}.session"]
+  if record.respond_to?(:accept_session?) && session['unique_session_id'].present?
     record.un_archive_unique_session(session['unique_session_id'])
-  elsif session['unique_session_id'].present?
     session.delete 'unique_session_id'
   end
 end
