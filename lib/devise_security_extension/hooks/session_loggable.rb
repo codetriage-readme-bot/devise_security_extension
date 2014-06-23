@@ -27,7 +27,7 @@ end
 
 Warden::Manager.before_logout do |record, warden, options|
   session =  warden.request.session["warden.user.#{options[:scope]}.session"]
-  if record.respond_to?(:invalidate_devise_session_log!) && session['unique_auth_token_id'].present?
+  if record && record.respond_to?(:invalidate_devise_session_log!) && session && session['unique_auth_token_id'].present?
     record.invalidate_devise_session_log!(session['unique_auth_token_id'])
     session.delete 'unique_auth_token_id'
   end
