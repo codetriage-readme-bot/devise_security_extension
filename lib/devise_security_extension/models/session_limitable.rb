@@ -15,32 +15,40 @@ module Devise
       end
 
       def un_archive_unique_session(unique_session_id)
-        unique_session = self.devise_sessions.where(:unique_session_id => unique_session_id)
-        unique_session.delete_all if unique_session.present?
+        find_unique_session_id(unique_session_id).try :delete
       end
 
-      def archive_unique_session!(unique_session_id)
-        if !sessions_on_limit? || (!reject_session_on_limit? && allow_create_session?) || sessions_allowed_count == 0
-          archive_unique_session(unique_session_id)
-        end
+      def archive_unique_session!
+        archive_unique_session if allow_create_session?
       end
 
       def update_last_request_at(unique_session_id)
-        unique_session = self.devise_sessions.where(:unique_session_id => unique_session_id).first
-        unique_session.update_attributes(:last_request_at => Time.now) if unique_session.present?
+        find_unique_session_id(unique_session_id).update_attributes(:last_request_at => Time.now)
       end
 
-      def accept_unique_session?(unique_session_id)
-        self.devise_sessions.where(:unique_session_id => unique_session_id).count > 0
+      def find_unique_session_id(unique_session_id)
+        self.devise_sessions.find :first, :conditions => {:unique_session_id =>unique_session_id}
       end
+      alias_method :accept_unique_session?, :find_unique_session_id
 
       private
-      def archive_unique_session(unique_session_id)
-        unique_session = self.devise_sessions.where(:unique_session_id => unique_session_id).first_or_create
-        unique_session.update_attributes(:last_request_at => Time.now)
+      def generate_unique_session
+        loop do
+          token = Devise.friendly_token
+          break token unless accept_unique_session?(token)
+        end
+      end
+
+      def archive_unique_session
+        devise_session = self.devise_sessions.new(:unique_session_id => generate_unique_session, :last_request_at => Time.now)
+        devise_session.save ? devise_session.unique_session_id : false
       end
 
       def allow_create_session?
+        !sessions_on_limit? || (!reject_session_on_limit? && create_session_space!) || sessions_allowed_count == 0
+      end
+
+      def create_session_space!
         reject_session_on_limit? ? self.devise_sessions.where('last_request_at <= ?', (Time.now - session_expiration)).destroy_all : self.devise_sessions.order(:id).reverse_order.offset(sessions_allowed_count).delete_all
       end
 
@@ -49,23 +57,15 @@ module Devise
       end
 
       def sessions_on_limit?
-        active_sessions_count >= sessions_allowed_count
+        self.devise_sessions.count >= sessions_allowed_count
       end
 
       def sessions_allowed_count
-        if self.respond_to?(:sessions_count_limit) && self.sessions_count_limit.present?
-          self.sessions_count_limit.to_i
-        else
-          self.class.default_sessions_limit.to_i
-        end
-      end
-
-      def active_sessions_count
-        self.devise_sessions.count
+        self.respond_to?(:sessions_count_limit) && self.sessions_count_limit.present? ? self.sessions_count_limit : self.class.default_sessions_limit
       end
 
       def session_expiration
-        self.respond_to?(:sessions_expiration) && self.sessions_expiration.present? ? self.sessions_expiration.to_i : self.class.default_sessions_expiration.to_i
+        self.respond_to?(:sessions_expiration) && self.sessions_expiration.present? ? self.sessions_expiration : self.class.default_sessions_expiration
       end
 
       module ClassMethods

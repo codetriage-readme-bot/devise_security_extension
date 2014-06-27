@@ -5,9 +5,9 @@
 Warden::Manager.after_set_user :except => :fetch do |record, warden, options|
   scope = options[:scope]
   if record.respond_to?(:archive_unique_session!) && warden.authenticated?(options[:scope])
-    unique_session_id = Devise.friendly_token
-    if record.archive_unique_session!(unique_session_id)
-      warden.session(options[:scope])['unique_session_id'] = unique_session_id
+    unique_session = record.archive_unique_session!
+    if unique_session
+      warden.session(options[:scope])['unique_session_id'] = unique_session
     else
       warden.logout(scope)
       throw :warden, :scope => scope, :message => :session_limited
@@ -34,7 +34,7 @@ end
 # Destroy session
 Warden::Manager.before_logout do |record, warden, options|
   session =  warden.request.session["warden.user.#{options[:scope]}.session"]
-  if record.respond_to?(:accept_session?) && session['unique_session_id'].present?
+  if record.respond_to?(:un_archive_unique_session) && session['unique_session_id'].present?
     record.un_archive_unique_session(session['unique_session_id'])
     session.delete 'unique_session_id'
   end
