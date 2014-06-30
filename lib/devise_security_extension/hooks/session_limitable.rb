@@ -34,7 +34,7 @@ end
 # Destroy session
 Warden::Manager.before_logout do |record, warden, options|
   session =  warden.request.session["warden.user.#{options[:scope]}.session"]
-  if record.respond_to?(:un_archive_unique_session) && session['unique_session_id'].present?
+  if record.respond_to?(:un_archive_unique_session) && session.present? && session['unique_session_id'].present?
     record.un_archive_unique_session(session['unique_session_id'])
     session.delete 'unique_session_id'
   end
