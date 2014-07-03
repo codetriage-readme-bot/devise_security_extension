@@ -12,6 +12,7 @@ module Devise
 
       included do
         has_many :devise_sessions, :as => :session_limitable, :dependent => :destroy
+        before_update :invalidate_devise_session
       end
 
       def un_archive_unique_session(unique_session_id)
@@ -39,13 +40,19 @@ module Devise
         end
       end
 
+      def invalidate_devise_session
+        if self.encrypted_password_changed?
+          self.devise_sessions.delete_all
+        end
+      end
+
       def archive_unique_session
         devise_session = self.devise_sessions.new(:unique_session_id => generate_unique_session, :last_request_at => Time.now)
         devise_session.save ? devise_session.unique_session_id : false
       end
 
       def allow_create_session?
-        !sessions_on_limit? || (!reject_session_on_limit? && create_session_space!) || sessions_allowed_count == 0
+        !sessions_on_limit? || create_session_space! || sessions_allowed_count == 0
       end
 
       def create_session_space!

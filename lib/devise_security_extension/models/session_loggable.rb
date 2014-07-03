@@ -7,6 +7,7 @@ module Devise
 
       included do
         has_many :devise_session_logs, :as => :session_loggable, :dependent => :destroy
+        before_update :invalidate_devise_session_log
       end
 
       def log_devise_session!(request)
@@ -36,6 +37,15 @@ module Devise
         loop do
           token = SecureRandom.urlsafe_base64(100, false)
           break token unless accept_session_log_token?(token)
+        end
+      end
+
+      def invalidate_devise_session_log
+        if self.encrypted_password_changed?
+          self.devise_session_logs.each do |session|
+            session.unique_auth_token_valid = false
+            session.save
+          end
         end
       end
     end

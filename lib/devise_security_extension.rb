@@ -102,5 +102,7 @@ Devise.add_module :session_loggable, :model => 'devise_security_extension/models
 require 'devise_security_extension/routes'
 require 'devise_security_extension/rails'
 require 'devise_security_extension/orm/active_record'
+require 'devise_security_extension/models/devise_session'
+require 'devise_security_extension/models/devise_session_log'
 require 'devise_security_extension/models/old_password'
 require 'devise_security_extension/models/security_question'
