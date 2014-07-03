@@ -56,7 +56,7 @@ module Devise
       end
 
       def create_session_space!
-        reject_session_on_limit? ? self.devise_sessions.where('last_request_at <= ?', (Time.now - session_expiration)).destroy_all : self.devise_sessions.order(:id).reverse_order.offset(sessions_allowed_count).delete_all
+        reject_session_on_limit? ? self.devise_sessions.where('last_request_at <= ?', (Time.now - session_expiration)).destroy_all.count > 0 : self.devise_sessions.order(:id).reverse_order.offset(sessions_allowed_count).delete_all.count > 0
       end
 
       def reject_session_on_limit?
