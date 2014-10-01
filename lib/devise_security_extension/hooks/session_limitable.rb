@@ -26,7 +26,7 @@ Warden::Manager.after_set_user :only => :fetch do |record, warden, options|
       record.update_last_request_at(session['unique_session_id'])
     else
       warden.logout(scope)
-      throw :warden, :scope => scope, :message => :session_limited
+      throw :warden, :scope => scope, :message => :unauthenticated
     end
   end
 end
