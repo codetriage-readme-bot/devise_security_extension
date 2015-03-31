@@ -27,7 +27,7 @@ env:
   matrix:
     - DEVISE_ORM=active_record
 
-before_install: '[ -f "gemfiles/${BUNDLE_GEMFILE}.lock" ] && rm ${BUNDLE_GEMFILE}.lock'
+before_install: '[ -f "${BUNDLE_GEMFILE}.lock" ] && rm ${BUNDLE_GEMFILE}.lock'
 
 before_script: "bundle update"
 
