@@ -1,39 +1,26 @@
-require 'rubygems'
-require 'bundler'
-begin
-  Bundler.setup(:default, :development)
-rescue Bundler::BundlerError => e
-  $stderr.puts e.message
-  $stderr.puts "Run `bundle install` to install missing gems"
-  exit e.status_code
-end
-require 'rake'
-
-require 'jeweler'
-Jeweler::Tasks.new do |gem|
-  # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "devise_security_extension"
-  gem.homepage = "http://github.com/phatworx/devise_security_extension"
-  gem.license = "MIT"
-  gem.summary = %Q{Security extension for devise}
-  gem.description = %Q{An enterprise security extension for devise, trying to meet industrial standard security demands for web applications.}
-  gem.email = "team@phatworx.de"
-  gem.authors = ["Marco Scholl", "Alexander Dreher"]
-end
-Jeweler::RubygemsDotOrgTasks.new
-
+require 'bundler/gem_tasks'
 require 'rake/testtask'
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
+require 'rdoc/task'
+
+desc 'Default: run tests for all ORMs.'
+task default: :test
+
+desc 'Run unit tests.'
+Rake::TestTask.new(:test) do |t|
+  t.libs << 'lib'
+  t.libs << 'test'
+  t.pattern = 'test/**/*_test.rb'
+  t.verbose = true
+  t.warning = false
 end
 
 task :default => :test
 
 require 'rdoc/task'
+$:.push File.expand_path('../lib', __FILE__)
+require 'devise_security_extension/version'
 Rake::RDocTask.new do |rdoc|
-  version = File.exist?('VERSION') ? File.read('VERSION') : ""
+  version = DeviseSecurityExtension::VERSION.dup
 
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title = "devise_security_extension #{version}"

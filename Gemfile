@@ -1,6 +1,16 @@
-source "http://rubygems.org"
+source 'https://rubygems.org'
+
 gemspec
-# Add dependencies required to use your gem here.
-# Example:
-gem "rails", ">= 3.1.1"
-gem "devise", ">= 2.0.0"
+
+gem 'rails', '4.2.1'
+gem 'rdoc'
+
+gem 'rails_email_validator'
+gem 'easy_captcha'
+
+platforms :ruby do
+  gem 'sqlite3'
+end
+
+gem 'test-unit'
+

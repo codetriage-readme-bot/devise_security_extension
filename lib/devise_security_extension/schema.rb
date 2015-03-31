@@ -55,5 +55,27 @@ module DeviseSecurityExtension
     def session_limitable
       apply_devise_schema :unique_session_id, String, :limit => 20
     end
+
+
+    # Add session_traceable columns in the resource's database table.
+    #
+    # Examples
+    #
+    # # For a new resource migration:
+    # create_table :the_resources do |t|
+    #   t.session_traceable
+    # ...
+    # end
+    #
+    def session_traceable
+      apply_devise_schema :unique_auth_token_id, String, null: true
+      apply_devise_schema :ip_address, String
+      apply_devise_schema :user_agent, String
+      apply_devise_schema :last_accessed_at, Time
+      apply_devise_schema :unique_auth_token_valid, Boolean
+
+      apply_devise_schema :session_traceable_type, String
+      apply_devise_schema :session_traceable_id, Integer
+    end
   end
 end

@@ -17,6 +17,16 @@ class CreateTables < ActiveRecord::Migration
 
       t.references :password_archivable, polymorphic: true
     end
+
+    create_table :devise_session_histories do |t|
+      t.text :unique_auth_token_id, null: false
+      t.string :ip_address
+      t.string :user_agent
+      t.time :last_accessed_at
+      t.boolean :unique_auth_token_valid, default: true
+
+      t.references :session_traceable, polymorphic: true
+    end
   end
 
   def self.down

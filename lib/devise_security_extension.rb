@@ -67,6 +67,9 @@ module Devise
   @@expire_after = 90.days
   mattr_accessor :delete_expired_after
   @@delete_expired_after = 90.days
+
+  mattr_accessor :session_traceable_class
+  @@session_traceable_class = 'DeviseSecurityExtension::SessionHistory'
 end
 
 # an security extension for devise
@@ -86,6 +89,7 @@ Devise.add_module :password_archivable, :model => 'devise_security_extension/mod
 Devise.add_module :session_limitable, :model => 'devise_security_extension/models/session_limitable'
 Devise.add_module :expirable, :model => 'devise_security_extension/models/expirable'
 Devise.add_module :security_questionable, :model => 'devise_security_extension/models/security_questionable'
+Devise.add_module :session_traceable, :model => 'devise_security_extension/models/session_traceable'
 
 # requires
 require 'devise_security_extension/routes'
