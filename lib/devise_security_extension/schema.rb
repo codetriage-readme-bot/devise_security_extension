@@ -71,7 +71,7 @@ module DeviseSecurityExtension
       apply_devise_schema :unique_auth_token_id, String, null: true
       apply_devise_schema :ip_address, String
       apply_devise_schema :user_agent, String
-      apply_devise_schema :last_accessed_at, Time
+      apply_devise_schema :last_accessed_at, DateTime
       apply_devise_schema :unique_auth_token_valid, Boolean
 
       apply_devise_schema :session_traceable_type, String

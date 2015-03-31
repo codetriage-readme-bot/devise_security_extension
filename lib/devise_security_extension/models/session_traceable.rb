@@ -34,7 +34,7 @@ module Devise
       #
       def log_traceable_request!(options = {})
         token = generate_traceable_token
-        opts = options.merge unique_auth_token_id: token, last_accessed_at: Time.now
+        opts = options.merge unique_auth_token_id: token, last_accessed_at: Time.now.utc
         opts = session_traceable_condition(opts)
         session_traceable_adapter.create!(opts) && token
       end
@@ -50,7 +50,7 @@ module Devise
       #
       def update_traceable_token(token)
         record = find_traceable_by_token(token)
-        record.last_accessed_at = Time.now
+        record.last_accessed_at = Time.now.utc
         record.save(validate: false)
       end
 

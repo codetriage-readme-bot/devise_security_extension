@@ -1,3 +1,6 @@
+require 'coveralls'
+Coveralls.wear!
+
 ENV['RAILS_ENV'] = 'test'
 DEVISE_ORM = (ENV['DEVISE_ORM'] || :active_record).to_sym
 
@@ -18,9 +21,6 @@ end
 if ActiveSupport.respond_to?(:test_order)
   ActiveSupport.test_order = :random
 end
-
-# $:.unshift(File.expand_path(File.dirname(__FILE__) + '../../lib/'))
-# require 'devise_security_extension'
 
 # Add support to load paths so we can overwrite broken webrat setup
 $:.unshift File.expand_path('../support', __FILE__)

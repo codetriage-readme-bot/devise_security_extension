@@ -8,7 +8,7 @@ Warden::Manager.after_set_user except: :fetch do |record, warden, options|
     opts = {}
     opts[:ip_address] = warden.request.remote_ip
     opts[:user_agent] = warden.request.env['HTTP_USER_AGENT']
-    unique_auth_token_id = record.log_traceable_request!(warden.request)
+    unique_auth_token_id = record.log_traceable_request!(opts)
     if unique_auth_token_id
       warden.session(options[:scope])['unique_auth_token_id'] = unique_auth_token_id
     else
@@ -25,7 +25,7 @@ Warden::Manager.after_set_user only: :fetch do |record, warden, options|
   scope = options[:scope]
   session =  warden.session(scope)
   if record.respond_to?(:accept_traceable_token?) && warden.authenticated?(scope) && options[:store] != false
-    opts = {ip_address: warden.request.remote_ip}
+    opts = { ip_address: warden.request.remote_ip }
     if session['unique_auth_token_id'].present? && record.accept_traceable_token?(session['unique_auth_token_id'], opts)
       record.update_traceable_token(session['unique_auth_token_id'])
     else

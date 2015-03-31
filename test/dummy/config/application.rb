@@ -1,22 +1,29 @@
 require File.expand_path('../boot', __FILE__)
 
-require 'rails/all'
+require 'action_controller/railtie'
+require 'action_mailer/railtie'
+require 'rails/test_unit/railtie'
 
-if defined?(Bundler)
-  # If you precompile assets before deploying to production, use this line
-  Bundler.require(*Rails.groups(:assets => %w(development test)))
-  # If you want your assets lazily compiled in production, use this line
-  # Bundler.require(:default, :assets, Rails.env)
+Bundler.require :default, DEVISE_ORM
+
+begin
+  require "#{DEVISE_ORM}/railtie"
+rescue LoadError
 end
+
+require 'devise_security_extension'
 
 module RailsApp
   class Application < Rails::Application
-    config.encoding = "utf-8"
+    # Configure generators values. Many other options are available, be sure to check the documentation.
+    # config.generators do |g|
+    #   g.orm             :active_record
+    #   g.template_engine :erb
+    #   g.test_framework  :test_unit, fixture: true
+    # end
 
-    config.filter_parameters += [:password]
-
-    config.assets.enabled = true
-
-    config.assets.version = '1.0'
+    # Configure sensitive parameters which will be filtered from the log file.
+    config.filter_parameters << :password
+    config.assets.enabled = false
   end
 end

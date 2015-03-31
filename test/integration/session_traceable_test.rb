@@ -10,17 +10,36 @@ class SessionTraceableTest < ActionDispatch::IntegrationTest
     assert_not_nil unique_auth_token_id
   end
 
-  test 'sign out when unique_auth_token_id is not set' do
+  test 'last_accessed_at are updated on each request' do
+    user = create_user
+
+    first_time = Time.now
+    Time.stubs(:now).returns(first_time)
     sign_in_as_user
-    @controller.user_session.delete('unique_auth_token_id')
-    assert_not warden.authenticated?(:user)
+
+    token = unique_auth_token_id
+    session = user.find_traceable_by_token(token)
+    first_accessed_at = session.last_accessed_at
+    assert_equal first_time, first_accessed_at
+
+    new_time = 2.seconds.from_now
+    Time.stubs(:now).returns(new_time)
+    visit root_path
+
+    session.reload
+    assert session.last_accessed_at > first_accessed_at
   end
 
-  test 'sign out when unique_auth_token_id is expired' do
+  test 'session record should expire on sign out' do
+    user = create_user
     sign_in_as_user
     token = unique_auth_token_id
 
-    assert create_user.expire_session_token(token)
-    assert_not warden.authenticated?(:user)
+    session = user.find_traceable_by_token(token)
+    assert session.unique_auth_token_valid
+
+    visit destroy_user_session_path
+    session.reload
+    assert_not session.unique_auth_token_valid
   end
 end
