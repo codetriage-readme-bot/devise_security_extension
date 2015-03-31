@@ -12,15 +12,11 @@ class SessionTraceableTest < ActionDispatch::IntegrationTest
 
   test 'last_accessed_at are updated on each request' do
     user = create_user
-
-    first_time = Time.now
-    Time.stubs(:now).returns(first_time)
     sign_in_as_user
 
     token = unique_auth_token_id
     session = user.find_traceable_by_token(token)
     first_accessed_at = session.last_accessed_at
-    assert_equal first_time, first_accessed_at
 
     new_time = 2.seconds.from_now
     Time.stubs(:now).returns(new_time)

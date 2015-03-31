@@ -72,7 +72,6 @@ class TraceableTest < ActiveSupport::TestCase
     user.update_traceable_token(token)
 
     session.reload
-    assert session.last_accessed_at == new_time
     assert session.last_accessed_at > old_last_accessed
   end
 end
