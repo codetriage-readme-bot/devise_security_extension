@@ -8,7 +8,7 @@ class CreateTables < ActiveRecord::Migration
       t.string :email,              :null => false, :default => ""
       t.string :encrypted_password, :null => false, :default => ""
 
-      t.timestamps
+      t.timestamps(null: false)
     end
 
     create_table :old_passwords do |t|
