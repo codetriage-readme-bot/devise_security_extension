@@ -1,4 +1,4 @@
-# Devise Security Extension
+# Devise Security Extension [![Build Status](https://travis-ci.org/plataformatec/devise_security_extension.svg)](https://travis-ci.org/plataformatec/devise_security_extension)
 
 An enterprise security extension for [Devise](https://github.com/plataformatec/devise), trying to meet industrial standard security demands for web applications.
 
