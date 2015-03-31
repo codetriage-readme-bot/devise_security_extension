@@ -1,11 +1,11 @@
 require 'active_support/test_case'
 
 class ActiveSupport::TestCase
-  def assert_not(assertion, msg = nil)
+  def assert_not(assertion, msg = '')
     assert !assertion, msg
   end
 
-  def assert_blank(assertion, msg = nil)
+  def assert_blank(assertion, msg = '')
     assert assertion.blank?, msg
   end
 
