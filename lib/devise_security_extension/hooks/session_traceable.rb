@@ -37,7 +37,7 @@ end
 
 # Before each sign out, we expire the session.
 Warden::Manager.before_logout do |record, warden, options|
-  session =  warden.session(options[:scope])
+  session =  warden.request.session["warden.user.#{options[:scope]}.session"]
   if record && record.respond_to?(:expire_session_token) && session && session['unique_auth_token_id'].present?
     record.expire_session_token(session['unique_auth_token_id'])
     session.delete 'unique_auth_token_id'
