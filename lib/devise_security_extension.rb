@@ -70,6 +70,18 @@ module Devise
 
   mattr_accessor :session_traceable_class
   @@session_traceable_class = 'DeviseSecurityExtension::SessionHistory'
+
+  mattr_accessor :session_limitable_class
+  @@session_limitable_class = 'DeviseSecurityExtension::SessionLimit'
+
+  mattr_accessor :limit_session_to
+  @@limit_session_to = 1
+
+  mattr_accessor :timeout_session_in
+  @@timeout_session_in = nil
+
+  mattr_accessor :reject_session_on_limit
+  @@reject_session_on_limit = true
 end
 
 # an security extension for devise

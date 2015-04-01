@@ -49,11 +49,17 @@ module DeviseSecurityExtension
     #
     # # or if the resource's table already exists, define a migration and put this in:
     # change_table :the_resources do |t|
-    #   t.string :unique_session_id, :limit => 20
+    #   t.string :unique_session_id, limit: 20
+    #   t.datetime :last_accessed_at
+    #   t.references :session_traceable, polymorphic: true, index: true
     # end
     #
     def session_limitable
       apply_devise_schema :unique_session_id, String, :limit => 20
+      apply_devise_schema :last_accessed_at, DateTime
+
+      apply_devise_schema :session_limitable_type, String
+      apply_devise_schema :session_limitable_id, Integer
     end
 
 

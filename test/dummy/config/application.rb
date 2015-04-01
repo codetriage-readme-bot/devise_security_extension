@@ -15,6 +15,8 @@ require 'devise_security_extension'
 
 module RailsApp
   class Application < Rails::Application
+    config.autoload_paths += ["#{config.root}/app/#{DEVISE_ORM}"]
+
     # Configure generators values. Many other options are available, be sure to check the documentation.
     # config.generators do |g|
     #   g.orm             :active_record

@@ -23,6 +23,13 @@ ActiveRecord::Schema.define(version: 20120508165529) do
     t.string   "session_traceable_type"
   end
 
+  create_table "devise_session_limits", force: :cascade do |t|
+    t.string   "unique_session_id",      limit: 20
+    t.datetime "last_accessed_at"
+    t.integer  "session_limitable_id"
+    t.string   "session_limitable_type"
+  end
+
   create_table "old_passwords", force: :cascade do |t|
     t.string  "encrypted_password"
     t.string  "password_salt"

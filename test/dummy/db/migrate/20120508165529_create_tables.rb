@@ -27,10 +27,19 @@ class CreateTables < ActiveRecord::Migration
 
       t.references :session_traceable, polymorphic: true
     end
+
+    create_table :devise_session_limits do |t|
+      t.string :unique_session_id, limit: 20
+      t.datetime :last_accessed_at
+
+      t.references :session_limitable, polymorphic: true
+    end
   end
 
   def self.down
     drop_table :users
     drop_table :old_passwords
+    drop_table :devise_session_histories
+    drop_table :devise_session_limits
   end
 end
