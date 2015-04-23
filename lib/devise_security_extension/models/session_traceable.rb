@@ -27,7 +27,7 @@ module Devise
       end
 
       def self.required_fields(klass)
-        [:session_traceable_class]
+        [:session_traceable_class, :paranoid_ip_verification]
       end
 
       # Create new traceable session
@@ -43,6 +43,11 @@ module Devise
       #
       def accept_traceable_token?(token, options = {})
         opts = options.merge unique_auth_token_valid: true
+        if paranoid_ip_verification
+          opts[:ip_address] ||= nil
+        else
+          opts.delete(:ip_address)
+        end
         find_traceable_by_token(token, opts).present?
       end
 
@@ -71,6 +76,10 @@ module Devise
         session_traceable_adapter.find_first opts
       end
 
+      def paranoid_ip_verification
+        self.class.paranoid_ip_verification
+      end
+
       private
 
       def generate_traceable_token
@@ -89,7 +98,7 @@ module Devise
       end
 
       module ClassMethods
-        ::Devise::Models.config(self, :session_traceable_class)
+        ::Devise::Models.config(self, :session_traceable_class, :paranoid_ip_verification)
       end
     end
   end

@@ -82,6 +82,9 @@ module Devise
 
   mattr_accessor :reject_session_on_limit
   @@reject_session_on_limit = true
+
+  mattr_accessor :paranoid_ip_verification
+  @@paranoid_ip_verification = true
 end
 
 # an security extension for devise

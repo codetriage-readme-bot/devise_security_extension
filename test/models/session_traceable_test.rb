@@ -3,7 +3,7 @@ require 'test_models'
 
 class TraceableTest < ActiveSupport::TestCase
   test 'required_fields should contain the fields that Devise uses' do
-    assert_same_content Devise::Models::SessionTraceable.required_fields(User), [:session_traceable_class]
+    assert_same_content Devise::Models::SessionTraceable.required_fields(User), [:session_traceable_class, :paranoid_ip_verification]
   end
 
   test 'custom session_traceable should not raise exception' do
@@ -32,10 +32,25 @@ class TraceableTest < ActiveSupport::TestCase
     assert_not_empty create_user.log_traceable_request!(default_options)
   end
 
+  test 'token should be paranoid with ip address' do
+    user = create_user
+    token = user.log_traceable_request!(default_options)
+
+    assert_not user.accept_traceable_token?(token)
+  end
+
   test 'token should be accepted' do
     user = create_user
     token = user.log_traceable_request!(default_options)
-    assert user.accept_traceable_token?(token)
+    assert user.accept_traceable_token?(token, default_options)
+  end
+
+  test 'token should be accepted even different ip if not paranoid_ip_verification' do
+    swap Devise, paranoid_ip_verification: false do
+      user = create_user
+      token = user.log_traceable_request!(default_options)
+      assert user.accept_traceable_token?(token, ip_address: '0.0.0.0')
+    end
   end
 
   test 'expiring token should not raise exception' do
@@ -52,6 +67,16 @@ class TraceableTest < ActiveSupport::TestCase
     user.expire_session_token(token)
 
     assert_not user.accept_traceable_token?(token)
+  end
+
+  test 'expired token should not be accepted even different ip if not paranoid_ip_verification' do
+    swap Devise, paranoid_ip_verification: false do
+      user = create_user
+      token = user.log_traceable_request!(default_options)
+      user.expire_session_token(token)
+
+      assert_not user.accept_traceable_token?(token, ip_address: '0.0.0.0')
+    end
   end
 
   test 'last_accessed_at should be updated' do
