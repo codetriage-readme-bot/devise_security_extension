@@ -64,6 +64,7 @@ module Devise
       #
       def expire_session_token(token)
         record = find_traceable_by_token(token)
+        return unless record
         record.unique_auth_token_valid = false
         record.save(validate: false)
       end
