@@ -1,5 +1,7 @@
 require 'coveralls'
-Coveralls.wear!
+Coveralls.wear! do
+  add_filter 'test'
+end
 
 ENV['RAILS_ENV'] = 'test'
 DEVISE_ORM = (ENV['DEVISE_ORM'] || :active_record).to_sym
