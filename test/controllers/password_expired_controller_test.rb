@@ -18,12 +18,14 @@ class Devise::PasswordExpiredControllerTest < ActionController::TestCase
     assert_includes @response.body, 'Renew your password'
   end
 
-  test 'shold update password' do
-    put :update, params: { user: {
-      current_password: '1234',
-      password: '12345',
-      password_confirmation: '12345'
-    } }
+  test 'should update password' do
+    put :update, {
+        user: {
+            current_password: '1234',
+            password: '12345',
+            password_confirmation: '12345'
+        }
+    }
     assert_redirected_to root_path
   end
 end
