@@ -23,11 +23,11 @@ module Devise
 
       included do
         has_many :session_histories, as: :session_traceable,
-                 class_name: session_traceable_class, dependent: :destroy
+                                     class_name: session_traceable_class, dependent: :destroy
       end
 
-      def self.required_fields(klass)
-        [:session_traceable_class, :paranoid_ip_verification]
+      def self.required_fields(_klass)
+        %i(session_traceable_class paranoid_ip_verification)
       end
 
       # Create new traceable session
@@ -86,7 +86,7 @@ module Devise
       def generate_traceable_token
         loop do
           token = Devise.friendly_token
-          break token unless find_traceable_by_token(token).present?
+          break token if find_traceable_by_token(token).blank?
         end
       end
 

@@ -3,7 +3,7 @@ require 'test_models'
 
 class TraceableTest < ActiveSupport::TestCase
   test 'required_fields should contain the fields that Devise uses' do
-    assert_same_content Devise::Models::SessionTraceable.required_fields(User), [:session_traceable_class, :paranoid_ip_verification]
+    assert_same_content Devise::Models::SessionTraceable.required_fields(User), %i(session_traceable_class paranoid_ip_verification)
   end
 
   test 'custom session_traceable should not raise exception' do

@@ -7,16 +7,15 @@ class ActiveSupport::TestCase
     "test#{@@email_count}@example.com"
   end
 
-  def valid_attributes(attributes={})
+  def valid_attributes(attributes = {})
     { username: 'usertest',
       email: generate_unique_email,
       password: '12345678',
       password_confirmation: '12345678',
-      created_at: Time.now.utc
-    }.update(attributes)
+      created_at: Time.now.utc }.update(attributes)
   end
 
-  def new_user(attributes={})
+  def new_user(attributes = {})
     User.new(valid_attributes(attributes))
   end
 

@@ -6,18 +6,18 @@ module Devise
     # SessionLimited ensures, that there is only one session usable per account at once.
     # If someone logs in, and some other is logging in with the same credentials,
     # the session from the first one is invalidated and not usable anymore.
-    # The first one is redirected to the sign page with a message, telling that 
+    # The first one is redirected to the sign page with a message, telling that
     # someone used his credentials to sign in.
     module SessionLimitable
       extend ActiveSupport::Concern
 
       included do
         has_many :session_limits, as: :session_limitable,
-                 class_name: session_limitable_class, dependent: :destroy
+                                  class_name: session_limitable_class, dependent: :destroy
       end
 
-      def self.required_fields(klass)
-        [:session_limitable_class, :limit_session_to, :timeout_session_in, :reject_session_on_limit]
+      def self.required_fields(_klass)
+        %i(session_limitable_class limit_session_to timeout_session_in reject_session_on_limit)
       end
 
       # Create new limitable session
@@ -25,7 +25,7 @@ module Devise
       def log_limitable_request!
         token = generate_limitable_token
         opts = session_limitable_condition unique_session_id: token,
-                                           last_accessed_at: Time.now.utc
+                                           last_accessed_at: Time.current
         authenticate_limitable? && session_limitable_adapter.create!(opts) && token
       end
 
@@ -39,7 +39,7 @@ module Devise
       #
       def update_limitable_access_at(token_or_object)
         record = extract_object_from_options(token_or_object)
-        record.last_accessed_at = Time.now.utc
+        record.last_accessed_at = Time.current
         record.save(validate: false)
       end
 
@@ -53,9 +53,12 @@ module Devise
       # Find the first instance, matching +token_or_object+, and optional +options+.
       #
       def find_limitable_by_token(token, options = {})
-        token, options = nil, token if token.is_a?(Hash)
+        if token.is_a?(Hash)
+          options = token
+          token = nil
+        end
 
-        options.merge! unique_session_id: token if token
+        options[:unique_session_id] = token if token
         options = session_limitable_condition(options)
 
         session_limitable_adapter.find_first options
@@ -66,11 +69,9 @@ module Devise
       end
 
       def timeout_session_in
-        self.class.timeout_session_in || if respond_to?(:timeout_in)
-                                                  timeout_in
-                                                else
-                                                  0.seconds
-                                                end
+        duration = timeout_in if respond_to?(:timeout_in)
+        duration ||= self.class.timeout_session_in
+        duration || 0.seconds
       end
 
       def reject_session_on_limit
@@ -82,7 +83,7 @@ module Devise
       def generate_limitable_token
         loop do
           token = Devise.friendly_token
-          break token unless find_limitable_by_token(token).present?
+          break token if find_limitable_by_token(token).blank?
         end
       end
 
@@ -98,12 +99,14 @@ module Devise
       #
       def authenticate_limitable?
         return true if limit_session_to > session_limits.count
-        opts = session_limitable_condition(order: [:last_accessed_at, :asc])
+        opts = session_limitable_condition(order: %i(last_accessed_at asc))
         if reject_session_on_limit
           # When +reject_session_on_limit+ is true, check for session that already timeout.
           # If exist, remove that session.
           session_limitable_adapter.find_all(opts).any? do |session|
-            expire_session_limit(session) if ((Time.now.utc - timeout_session_in) <=> session.last_accessed_at) >= 0
+            if ((Time.current - timeout_session_in) <=> session.last_accessed_at) >= 0
+              expire_session_limit(session)
+            end
           end
         else
           # Remove oldest session if +reject_session_on_limit+ is false.

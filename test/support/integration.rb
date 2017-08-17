@@ -5,20 +5,20 @@ class ActionDispatch::IntegrationTest
     request.env['warden']
   end
 
-  def create_user(options={})
+  def create_user(options = {})
     @user ||= begin
       user = User.create!(
-          username: 'usertest',
-          email: options[:email] || 'user@test.com',
-          password: options[:password] || '12345678',
-          password_confirmation: options[:password] || '12345678',
-          created_at: Time.now.utc
+        username: 'usertest',
+        email: options[:email] || 'user@test.com',
+        password: options[:password] || '12345678',
+        password_confirmation: options[:password] || '12345678',
+        created_at: Time.now.utc
       )
       user
     end
   end
 
-  def sign_in_as_user(options={}, &block)
+  def sign_in_as_user(options = {})
     user = create_user(options)
     visit_with_option options[:visit], new_user_session_path
     fill_in 'email', with: options[:email] || 'user@test.com'
@@ -36,7 +36,7 @@ class ActionDispatch::IntegrationTest
     assert [301, 302].include?(@integration_session.status),
            "Expected status to be 301 or 302, got #{@integration_session.status}"
 
-    assert_url url, @integration_session.headers["Location"]
+    assert_url url, @integration_session.headers['Location']
   end
 
   def assert_current_url(expected)
@@ -51,17 +51,17 @@ class ActionDispatch::IntegrationTest
 
   def visit_with_option(given, default)
     case given
-      when String
-        visit given
-      when FalseClass
-        # Do nothing
-      else
-        visit default
+    when String
+      visit given
+    when FalseClass
+    # Do nothing
+    else
+      visit default
     end
   end
 
   def prepend_host(url)
-    url = "http://#{request.host}#{url}" if url[0] == ?/
+    url = "http://#{request.host}#{url}" if url[0] == '/'
     url
   end
 end

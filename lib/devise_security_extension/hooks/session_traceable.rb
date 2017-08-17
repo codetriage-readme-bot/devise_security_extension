@@ -13,7 +13,7 @@ Warden::Manager.after_set_user except: :fetch do |record, warden, options|
       warden.session(options[:scope])['unique_auth_token_id'] = unique_auth_token_id
     else
       warden.logout(scope)
-      throw :warden, :scope => scope, :message => :unauthenticated
+      throw :warden, scope: scope, message: :unauthenticated
     end
   end
 end
@@ -23,21 +23,21 @@ end
 # If so, the session we set the last accessed time.
 Warden::Manager.after_set_user only: :fetch do |record, warden, options|
   scope = options[:scope]
-  session =  warden.session(scope)
+  session = warden.session(scope)
   if record.respond_to?(:accept_traceable_token?) && warden.authenticated?(scope) && options[:store] != false
     opts = { ip_address: warden.request.remote_ip }
     if session['unique_auth_token_id'].present? && record.accept_traceable_token?(session['unique_auth_token_id'], opts)
       record.update_traceable_token(session['unique_auth_token_id'])
     else
       warden.logout(scope)
-      throw :warden, :scope => scope, :message => :unauthenticated
+      throw :warden, scope: scope, message: :unauthenticated
     end
   end
 end
 
 # Before each sign out, we expire the session.
 Warden::Manager.before_logout do |record, warden, options|
-  session =  warden.request.session["warden.user.#{options[:scope]}.session"]
+  session = warden.request.session["warden.user.#{options[:scope]}.session"]
   if record && record.respond_to?(:expire_session_token) && session && session['unique_auth_token_id'].present?
     record.expire_session_token(session['unique_auth_token_id'])
     session.delete 'unique_auth_token_id'

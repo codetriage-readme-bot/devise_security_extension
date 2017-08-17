@@ -30,10 +30,10 @@ module DeviseSecurityExtension
     # add_index :old_passwords, [:password_archivable_type, :password_archivable_id], :name => :index_password_archivable
     #
     def password_archivable
-      apply_devise_schema :encrypted_password, String, :limit => 128, :null => false
+      apply_devise_schema :encrypted_password, String, limit: 128, null: false
       apply_devise_schema :password_salt, String
-      apply_devise_schema :password_archivable_id, Integer, :null => false
-      apply_devise_schema :password_archivable_type, String, :null => false
+      apply_devise_schema :password_archivable_id, Integer, null: false
+      apply_devise_schema :password_archivable_type, String, null: false
       apply_devise_schema :created_at, DateTime
     end
 
@@ -55,13 +55,12 @@ module DeviseSecurityExtension
     # end
     #
     def session_limitable
-      apply_devise_schema :unique_session_id, String, :limit => 20
+      apply_devise_schema :unique_session_id, String, limit: 20
       apply_devise_schema :last_accessed_at, DateTime
 
       apply_devise_schema :session_limitable_type, String
       apply_devise_schema :session_limitable_id, Integer
     end
-
 
     # Add session_traceable columns in the resource's database table.
     #

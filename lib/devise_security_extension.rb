@@ -5,7 +5,6 @@ require 'active_support/concern'
 require 'devise'
 
 module Devise
-
   # Should the password expire (e.g 3.months)
   mattr_accessor :expire_password_after
   @@expire_password_after = 3.months
@@ -85,6 +84,12 @@ module Devise
 
   mattr_accessor :paranoid_ip_verification
   @@paranoid_ip_verification = true
+
+  # The parent model all Devise models inherit from.
+  # Defaults to ActionMailer::Base. This should be set early
+  # in the initialization process and should be set to a string.
+  mattr_accessor :parent_model
+  @@parent_model = 'ActiveRecord::Base'
 end
 
 # an security extension for devise
@@ -98,13 +103,13 @@ module DeviseSecurityExtension
 end
 
 # modules
-Devise.add_module :password_expirable, :controller => :password_expirable, :model => 'devise_security_extension/models/password_expirable', :route => :password_expired
-Devise.add_module :secure_validatable, :model => 'devise_security_extension/models/secure_validatable'
-Devise.add_module :password_archivable, :model => 'devise_security_extension/models/password_archivable'
-Devise.add_module :session_limitable, :model => 'devise_security_extension/models/session_limitable'
-Devise.add_module :expirable, :model => 'devise_security_extension/models/expirable'
-Devise.add_module :security_questionable, :model => 'devise_security_extension/models/security_questionable'
-Devise.add_module :session_traceable, :model => 'devise_security_extension/models/session_traceable'
+Devise.add_module :password_expirable, controller: :password_expirable, model: 'devise_security_extension/models/password_expirable', route: :password_expired
+Devise.add_module :secure_validatable, model: 'devise_security_extension/models/secure_validatable'
+Devise.add_module :password_archivable, model: 'devise_security_extension/models/password_archivable'
+Devise.add_module :session_limitable, model: 'devise_security_extension/models/session_limitable'
+Devise.add_module :expirable, model: 'devise_security_extension/models/expirable'
+Devise.add_module :security_questionable, model: 'devise_security_extension/models/security_questionable'
+Devise.add_module :session_traceable, model: 'devise_security_extension/models/session_traceable'
 
 # requires
 require 'devise_security_extension/routes'

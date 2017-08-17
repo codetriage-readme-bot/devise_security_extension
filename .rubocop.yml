@@ -1,0 +1,90 @@
+# This is the configuration used to check the source code.
+AllCops:
+  Exclude:
+    - 'db/schema.rb'
+    - '.direnv/**/*'
+    - 'vendor/**/*'
+    - 'bin/**/*'
+    - 'test/fixtures/**/*'
+    - '**/spec/dummy/**/*'
+  # Makes it easier to find which cop is responsible for emitting the error
+  DisplayCopNames: true
+
+###################### Lint ####################################
+
+Lint/Debugger:
+  Exclude:
+    - debug.rb
+
+###################### Styles ####################################    
+
+Style/FileName:
+  # Don't apply the rule to executables. It's better to match the gem name
+  # to the executable name.
+  Exclude:
+    - 'bin/*'
+
+Style/TrivialAccessors:
+  ExactNameMatch: true
+
+Style/Semicolon:
+  AllowAsExpressionSeparator: true
+
+Style/NumericLiterals:
+  MinDigits: 6
+
+# `$1` is shorter than `Regexp.last_match[1]`
+Style/PerlBackrefs:
+  Enabled: false
+
+# We avoid GuardClause because it can result in "suprise return"
+Style/GuardClause:
+  Enabled: false
+
+Style/SingleLineMethods:
+  Enabled: false
+
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    default: ()
+    '%i': '()'
+    '%I': '()'
+    '%r': '{}'
+    '%w': '()'
+    '%W': '()'
+
+Style/RescueModifier:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+###################### Metrics ####################################
+
+Metrics/LineLength:
+  Description: 'Limit lines to 120 characters.'
+  Max: 120
+
+Metrics/MethodLength:
+  Description: 'Avoid methods longer than 30 lines of code.'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#short-methods'
+  Enabled: true
+  Max: 30
+
+Metrics/ModuleLength:
+  Description: 'Avoid modules longer than 250 lines of code.'
+  Enabled: true
+  Max: 250
+
+Metrics/BlockLength:
+  Exclude:
+    - 'Rakefile'
+    - '**/*.rake'
+    - '**/spec/**/*.rb'
+    - '**/*.gemspec'
+    - '**/config/routes.rb'
+
+###################### Rails ####################################
+
+Rails:
+  Enabled: true  

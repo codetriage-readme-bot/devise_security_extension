@@ -11,8 +11,8 @@ module DeviseSecurityExtension
 
     class << self
       def apply
-        Devise::PasswordsController.send(:include, Patches::PasswordsControllerCaptcha) if Devise.captcha_for_recover or Devise.security_question_for_recover
-        Devise::UnlocksController.send(:include, Patches::UnlocksControllerCaptcha) if Devise.captcha_for_unlock or Devise.security_question_for_unlock
+        Devise::PasswordsController.send(:include, Patches::PasswordsControllerCaptcha) if Devise.captcha_for_recover || Devise.security_question_for_recover
+        Devise::UnlocksController.send(:include, Patches::UnlocksControllerCaptcha) if Devise.captcha_for_unlock || Devise.security_question_for_unlock
         Devise::ConfirmationsController.send(:include, Patches::ConfirmationsControllerCaptcha) if Devise.captcha_for_confirmation
 
         Devise::PasswordsController.send(:include, Patches::PasswordsControllerSecurityQuestion) if Devise.security_question_for_recover

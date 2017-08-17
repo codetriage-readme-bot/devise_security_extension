@@ -11,7 +11,6 @@ module Devise
     #   * +password_regex+: need strong password. Defaults to /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/
     #
     module SecureValidatable
-
       def self.included(base)
         base.extend ClassMethods
         assert_secure_validations_api!(base)
@@ -21,23 +20,22 @@ module Devise
           unless has_uniqueness_validation_of_login?
             validation_condition = "#{login_attribute}_changed?".to_sym
 
-            validates login_attribute, :uniqueness => {
-                                          :scope          => authentication_keys[1..-1],
-                                          :case_sensitive => !!case_insensitive_keys
-                                        },
-                                        :if => validation_condition
+            validates login_attribute, uniqueness: {
+              scope: authentication_keys[1..-1],
+              case_sensitive: !!case_insensitive_keys
+            }, if: validation_condition
           end
 
           unless devise_validation_enabled?
-            validates :email, :presence => true, :if => :email_required?
-            validates :email, :uniqueness => true, :allow_blank => true, :if => :email_changed? # check uniq for email ever
+            validates :email, presence: true, if: :email_required?
+            validates :email, uniqueness: true, allow_blank: true, if: :email_changed? # check uniq for email ever
 
-            validates :password, :presence => true, :length => password_length, :confirmation => true, :if => :password_required?
+            validates :password, presence: true, length: password_length, confirmation: true, if: :password_required?
           end
 
           # extra validations
-          validates :email,    :email  => email_validation if email_validation # use rails_email_validator or similar
-          validates :password, :format => { :with => password_regex, :message => :password_format }, :if => :password_required?
+          validates :email,    email: email_validation if email_validation # use rails_email_validator or similar
+          validates :password, format: { with: password_regex, message: :password_format }, if: :password_required?
 
           # don't allow use same password
           validate :current_equal_password_validation
@@ -49,11 +47,13 @@ module Devise
       end
 
       def current_equal_password_validation
-        if not self.new_record? and not self.encrypted_password_change.nil?
+        if !new_record? && !encrypted_password_change.nil?
           dummy = self.class.new
-          dummy.encrypted_password = self.encrypted_password_change.first
-          dummy.password_salt = self.password_salt_change.first if self.respond_to? :password_salt_change and not self.password_salt_change.nil?
-          self.errors.add(:password, :equal_to_current_password) if dummy.valid_password?(self.password)
+          dummy.encrypted_password = encrypted_password_change.first
+          if respond_to?(:password_salt_change) && !password_salt_change.nil?
+            dummy.password_salt = password_salt_change.first
+          end
+          errors.add(:password, :equal_to_current_password) if dummy.valid_password?(password)
         end
       end
 
@@ -73,10 +73,11 @@ module Devise
       module ClassMethods
         Devise::Models.config(self, :password_regex, :password_length, :email_validation)
 
-      private
+        private
+
         def has_uniqueness_validation_of_login?
           validators.any? do |validator|
-            validator.kind_of?(ActiveRecord::Validations::UniquenessValidator) &&
+            validator.is_a?(ActiveRecord::Validations::UniquenessValidator) &&
               validator.attributes.include?(login_attribute)
           end
         end
@@ -86,7 +87,7 @@ module Devise
         end
 
         def devise_validation_enabled?
-          self.ancestors.map(&:to_s).include? 'Devise::Models::Validatable'
+          ancestors.map(&:to_s).include? 'Devise::Models::Validatable'
         end
       end
     end

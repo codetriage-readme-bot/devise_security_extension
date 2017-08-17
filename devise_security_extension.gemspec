@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
-$:.push File.expand_path('../lib', __FILE__)
+
+$LOAD_PATH.push File.expand_path('../lib', __FILE__)
 require 'devise_security_extension/version'
 
 Gem::Specification.new do |s|
@@ -10,7 +11,8 @@ Gem::Specification.new do |s|
   s.summary     = 'Security extension for devise'
   s.email       = 'team@phatworx.de'
   s.homepage    = 'http://github.com/phatworx/devise_security_extension'
-  s.description = 'An enterprise security extension for devise, trying to meet industrial standard security demands for web applications.'
+  s.description = 'An enterprise security extension for devise, '\
+    'trying to meet industrial standard security demands for web applications.'
   s.authors     = ['Marco Scholl', 'Alexander Dreher']
 
   s.files         = `git ls-files`.split("\n") - %w(.gitignore .travis.yml .ruby-version)
@@ -31,4 +33,3 @@ Gem::Specification.new do |s|
   s.add_development_dependency('sqlite3', '~> 1.3.10')
   s.add_development_dependency('webrat', '0.7.3')
 end
-

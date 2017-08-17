@@ -3,10 +3,10 @@ require 'test_models'
 
 class LimitableTest < ActiveSupport::TestCase
   test 'required_fields should contain the fields that Devise uses' do
-    assert_same_content Devise::Models::SessionLimitable.required_fields(User), [:session_limitable_class,
-                                                                                 :limit_session_to,
-                                                                                 :timeout_session_in,
-                                                                                 :reject_session_on_limit]
+    assert_same_content Devise::Models::SessionLimitable.required_fields(User), %i(session_limitable_class
+                                                                                   limit_session_to
+                                                                                   timeout_session_in
+                                                                                   reject_session_on_limit)
   end
 
   test 'should not raise exception' do

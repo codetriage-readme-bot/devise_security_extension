@@ -15,10 +15,10 @@ Rake::TestTask.new(:test) do |t|
   t.warning = false
 end
 
-task :default => :test
+task default: :test
 
 require 'rdoc/task'
-$:.push File.expand_path('../lib', __FILE__)
+$LOAD_PATH.push File.expand_path('../lib', __FILE__)
 require 'devise_security_extension/version'
 Rake::RDocTask.new do |rdoc|
   version = DeviseSecurityExtension::VERSION.dup

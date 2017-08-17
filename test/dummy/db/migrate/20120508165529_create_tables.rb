@@ -1,13 +1,13 @@
 # TODO: Inherit from the 5.0 Migration class directly when we drop support for Rails 4.
-class CreateTables < (ActiveRecord::Migration.respond_to?(:[]) ? ActiveRecord::Migration[5.0] : ActiveRecord::Migration )
+class CreateTables < (ActiveRecord::Migration.respond_to?(:[]) ? ActiveRecord::Migration[5.0] : ActiveRecord::Migration)
   def self.up
     create_table :users do |t|
       t.string :username
       t.string :facebook_token
 
       ## Database authenticatable
-      t.string :email,              :null => false, :default => ""
-      t.string :encrypted_password, :null => false, :default => ""
+      t.string :email,              null: false, default: ''
+      t.string :encrypted_password, null: false, default: ''
 
       t.timestamps(null: false)
     end

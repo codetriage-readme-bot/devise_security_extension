@@ -4,7 +4,7 @@ Coveralls.wear!
 ENV['RAILS_ENV'] = 'test'
 DEVISE_ORM = (ENV['DEVISE_ORM'] || :active_record).to_sym
 
-$:.unshift File.dirname(__FILE__)
+$LOAD_PATH.unshift File.dirname(__FILE__)
 puts "\n==> Devise.orm = #{DEVISE_ORM.inspect}"
 
 require 'dummy/config/environment'
@@ -18,10 +18,8 @@ Webrat.configure do |config|
   config.open_error_files = false
 end
 
-if ActiveSupport.respond_to?(:test_order)
-  ActiveSupport.test_order = :random
-end
+ActiveSupport.test_order = :random if ActiveSupport.respond_to?(:test_order)
 
 # Add support to load paths so we can overwrite broken webrat setup
-$:.unshift File.expand_path('../support', __FILE__)
+$LOAD_PATH.unshift File.expand_path('../support', __FILE__)
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }

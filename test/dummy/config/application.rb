@@ -1,8 +1,8 @@
 require File.expand_path('../boot', __FILE__)
 
-require "action_controller/railtie"
-require "action_mailer/railtie"
-require "rails/test_unit/railtie"
+require 'action_controller/railtie'
+require 'action_mailer/railtie'
+require 'rails/test_unit/railtie'
 
 Bundler.require :default, DEVISE_ORM
 
@@ -11,12 +11,12 @@ begin
 rescue LoadError
 end
 
-require "devise"
+require 'devise'
 
 module RailsApp
   class Application < Rails::Application
     # Add additional load paths for your own custom dirs
-    config.autoload_paths.reject!{ |p| p =~ /\/app\/(\w+)$/ && !%w(controllers helpers mailers views).include?($1) }
+    config.autoload_paths.reject! { |p| p =~ /\/app\/(\w+)$/ && !%w(controllers helpers mailers views).include?(Regexp.last_match(1)) }
     config.autoload_paths += ["#{config.root}/app/#{DEVISE_ORM}"]
 
     # Configure generators values. Many other options are available, be sure to check the documentation.
@@ -30,7 +30,7 @@ module RailsApp
     config.filter_parameters << :password
     # config.assets.enabled = false
 
-    config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+    config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
     if DEVISE_ORM == :active_record && (Rails::VERSION::MAJOR >= 4 && Rails::VERSION::MINOR >= 2)
       config.active_record.raise_in_transactional_callbacks = true
@@ -38,7 +38,7 @@ module RailsApp
 
     # This was used to break devise in some situations
     config.to_prepare do
-      Devise::SessionsController.layout "application"
+      Devise::SessionsController.layout 'application'
     end
   end
 end

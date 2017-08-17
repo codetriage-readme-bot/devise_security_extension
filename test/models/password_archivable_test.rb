@@ -28,12 +28,12 @@ class TestPasswordArchivable < ActiveSupport::TestCase
     user = User.create password: 'password1', password_confirmation: 'password1'
     assert_equal 0, OldPassword.count
 
-    assert set_password(user,  'password2')
+    assert set_password(user, 'password2')
     assert_equal 1, OldPassword.count
 
-    assert_raises(ActiveRecord::RecordInvalid) { set_password(user,  'password1') }
+    assert_raises(ActiveRecord::RecordInvalid) { set_password(user, 'password1') }
 
-    assert set_password(user,  'password3')
+    assert set_password(user, 'password3')
     assert_equal 2, OldPassword.count
 
     # rotate first password out of archive
@@ -53,7 +53,7 @@ class TestPasswordArchivable < ActiveSupport::TestCase
 
     user = User.create password: 'password1', password_confirmation: 'password1'
 
-    assert set_password(user,  'password2')
+    assert set_password(user, 'password2')
 
     assert_raises(ActiveRecord::RecordInvalid) { set_password(user,  'password2') }
 

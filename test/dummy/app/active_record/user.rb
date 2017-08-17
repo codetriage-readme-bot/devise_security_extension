@@ -1,6 +1,6 @@
 require 'shared_user'
 
-class User < ActiveRecord::Base
+class User < Devise.parent_model.constantize
   include Shim
   include SharedUser
 end
