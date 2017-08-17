@@ -31,6 +31,7 @@ module Devise
           old_passwords_including_cur_change.each do |old_password|
             dummy                    = self.class.new
             dummy.encrypted_password = old_password.encrypted_password
+            dummy.password_salt      = old_password.password_salt if dummy.respond_to?(:password_salt)
             return true if dummy.valid_password?(password)
           end
         end
