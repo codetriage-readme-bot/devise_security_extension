@@ -19,7 +19,7 @@ class SessionLimitableTest < ActionDispatch::IntegrationTest
     first_accessed_at = session.last_accessed_at
 
     new_time = 2.seconds.from_now
-    Time.stubs(:now).returns(new_time)
+    Time.stubs(:current).returns(new_time)
     visit root_path
 
     session.reload
@@ -38,5 +38,22 @@ class SessionLimitableTest < ActionDispatch::IntegrationTest
     assert_raise ActiveRecord::RecordNotFound do
       session.reload
     end
+  end
+
+  test 'sign in with session exceeded should fail' do
+    User.any_instance.stubs(:authenticate_limitable?).returns(false)
+    sign_in_as_user
+
+    refute warden.authenticated?(:user)
+  end
+
+  test 'logout when token is invalid' do
+    sign_in_as_user
+    assert warden.authenticated?(:user)
+
+    User.any_instance.stubs(:accept_limitable_token?).returns(false)
+    visit root_path
+
+    refute warden.authenticated?(:user)
   end
 end

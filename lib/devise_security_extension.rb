@@ -68,10 +68,10 @@ module Devise
   @@delete_expired_after = 90.days
 
   mattr_accessor :session_traceable_class
-  @@session_traceable_class = 'DeviseSecurityExtension::SessionHistory'
+  @@session_traceable_class = 'Devise::SessionHistory'
 
   mattr_accessor :session_limitable_class
-  @@session_limitable_class = 'DeviseSecurityExtension::SessionLimit'
+  @@session_limitable_class = 'Devise::SessionLimit'
 
   mattr_accessor :limit_session_to
   @@limit_session_to = 1
@@ -115,5 +115,3 @@ Devise.add_module :session_traceable, model: 'devise_security_extension/models/s
 require 'devise_security_extension/routes'
 require 'devise_security_extension/rails'
 require 'devise_security_extension/orm/active_record'
-require 'devise_security_extension/models/old_password'
-require 'devise_security_extension/models/security_question'

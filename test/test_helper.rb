@@ -23,3 +23,5 @@ ActiveSupport.test_order = :random if ActiveSupport.respond_to?(:test_order)
 # Add support to load paths so we can overwrite broken webrat setup
 $LOAD_PATH.unshift File.expand_path('../support', __FILE__)
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+
+require 'pry'

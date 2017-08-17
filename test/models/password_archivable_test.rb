@@ -3,11 +3,11 @@ require 'test_models'
 
 class TestPasswordArchivable < ActiveSupport::TestCase
   setup do
-    Devise.password_archiving_count = 2
+    User.stubs(:password_archiving_count).returns(2)
   end
 
   teardown do
-    Devise.password_archiving_count = 1
+    User.unstub(:password_archiving_count)
   end
 
   def set_password(user, password)
@@ -23,7 +23,7 @@ class TestPasswordArchivable < ActiveSupport::TestCase
   end
 
   test 'cannot use archived passwords' do
-    assert_equal 2, Devise.password_archiving_count
+    assert_equal 2, User.password_archiving_count
 
     user = User.create password: 'password1', password_confirmation: 'password1'
     assert_equal 0, OldPassword.count
@@ -45,11 +45,7 @@ class TestPasswordArchivable < ActiveSupport::TestCase
   end
 
   test 'the option should be dynamic during runtime' do
-    class ::User
-      def archive_count
-        1
-      end
-    end
+    User.any_instance.stubs(:archive_count).returns(1)
 
     user = User.create password: 'password1', password_confirmation: 'password1'
 

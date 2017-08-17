@@ -1,3 +1,5 @@
+require 'devise_security_extension/models/security_question'
+
 module Devise
   module Models
     # SecurityQuestionable is an accessible add-on for visually handicapped people,

@@ -38,4 +38,21 @@ class SessionTraceableTest < ActionDispatch::IntegrationTest
     session.reload
     assert_not session.unique_auth_token_valid
   end
+
+  test 'sign in when failed to log session should fail' do
+    Devise::SessionHistory.stubs(:create!).raises(ActiveRecord::RecordInvalid)
+    sign_in_as_user
+
+    refute warden.authenticated?(:user)
+  end
+
+  test 'logout when token is invalid' do
+    sign_in_as_user
+    assert warden.authenticated?(:user)
+
+    User.any_instance.stubs(:accept_traceable_token?).returns(false)
+    visit root_path
+
+    refute warden.authenticated?(:user)
+  end
 end

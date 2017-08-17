@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
   # s.add_development_dependency('easy_captcha')
   s.add_development_dependency('minitest')
   s.add_development_dependency('mocha', '~> 1.1')
+  s.add_development_dependency('pry')
   s.add_development_dependency('rails_email_validator')
   s.add_development_dependency('rubocop')
   s.add_development_dependency('sqlite3', '~> 1.3.10')

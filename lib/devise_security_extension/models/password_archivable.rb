@@ -1,3 +1,5 @@
+require 'devise_security_extension/models/old_password'
+
 module Devise
   module Models
     # PasswordArchivable

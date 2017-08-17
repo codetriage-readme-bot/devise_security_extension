@@ -1,4 +1,4 @@
-class InheritedSessionHistory < DeviseSecurityExtension::SessionHistory; end
+class InheritedSessionHistory < Devise::SessionHistory; end
 
 class CustomSessionHistory < Devise.parent_model.constantize
   self.table_name = 'devise_session_histories'

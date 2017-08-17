@@ -1,5 +1,5 @@
 require 'devise_security_extension/hooks/session_traceable'
-require 'devise_security_extension/session_history'
+require 'devise_security_extension/models/session_history'
 
 module Devise
   module Models
@@ -37,6 +37,8 @@ module Devise
         opts = options.merge unique_auth_token_id: token, last_accessed_at: Time.now.utc
         opts = session_traceable_condition(opts)
         session_traceable_adapter.create!(opts) && token
+      rescue
+        false
       end
 
       # Check if +token+ is valid

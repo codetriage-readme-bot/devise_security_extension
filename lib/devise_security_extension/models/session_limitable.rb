@@ -1,5 +1,5 @@
 require 'devise_security_extension/hooks/session_limitable'
-require 'devise_security_extension/session_limit'
+require 'devise_security_extension/models/session_limit'
 
 module Devise
   module Models
