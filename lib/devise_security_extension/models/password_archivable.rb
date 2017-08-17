@@ -26,13 +26,12 @@ module Devise
         end
 
         if self.class.deny_old_passwords > 0 and not self.password.nil?
-          old_passwords_including_cur_change = self.old_passwords.order(:id).reverse_order.limit(self.class.deny_old_passwords)
+          old_passwords_including_cur_change = self.old_passwords.order(:id).reverse_order.limit(self.class.deny_old_passwords).to_a
           old_passwords_including_cur_change << OldPassword.new(old_password_params)  # include most recent change in list, but don't save it yet!
           old_passwords_including_cur_change.each do |old_password|
             dummy                    = self.class.new
             dummy.encrypted_password = old_password.encrypted_password
-            dummy.password_salt      = old_password.password_salt if dummy.respond_to?(:password_salt)
-            return true if dummy.valid_password?(self.password)
+            return true if dummy.valid_password?(password)
           end
         end
 
