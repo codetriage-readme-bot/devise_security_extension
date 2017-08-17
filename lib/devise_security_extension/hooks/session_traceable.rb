@@ -24,7 +24,10 @@ end
 Warden::Manager.after_set_user only: :fetch do |record, warden, options|
   scope = options[:scope]
   session = warden.session(scope)
-  if record.respond_to?(:accept_traceable_token?) && warden.authenticated?(scope) && options[:store] != false
+  env = warden.request.env
+  if record.respond_to?(:accept_traceable_token?) && warden.authenticated?(scope) &&
+      options[:store] != false &&
+      !env['devise.skip_session_traceable']
     opts = { ip_address: warden.request.remote_ip }
     if session['unique_auth_token_id'].present? && record.accept_traceable_token?(session['unique_auth_token_id'], opts)
       record.update_traceable_token(session['unique_auth_token_id'])

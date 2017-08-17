@@ -9,6 +9,7 @@ class CreateTables < (ActiveRecord::Migration.respond_to?(:[]) ? ActiveRecord::M
       t.string :email,              null: false, default: ''
       t.string :encrypted_password, null: false, default: ''
 
+      t.datetime :password_changed_at
       t.timestamps(null: false)
     end
 
