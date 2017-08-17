@@ -17,8 +17,18 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- test/*`.split("\n")
   s.require_paths = ['lib']
   s.required_ruby_version = '>= 1.9.3'
-  s.extra_rdoc_files      = ['LICENSE.txt', 'README.md']
+  s.extra_rdoc_files      = %w(LICENSE.txt README.md)
 
-  s.add_dependency('devise', '>= 2.0.0')
+  s.add_dependency('devise', '>= 3.0.0', '< 5.0')
+
+  s.add_development_dependency('appraisal')
+  s.add_development_dependency('coveralls')
+  # s.add_development_dependency('easy_captcha')
+  s.add_development_dependency('minitest')
+  s.add_development_dependency('mocha', '~> 1.1')
+  s.add_development_dependency('rails_email_validator')
+  s.add_development_dependency('rubocop')
+  s.add_development_dependency('sqlite3', '~> 1.3.10')
+  s.add_development_dependency('webrat', '0.7.3')
 end
 

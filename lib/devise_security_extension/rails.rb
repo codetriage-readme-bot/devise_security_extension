@@ -3,10 +3,11 @@ module DeviseSecurityExtension
     ActiveSupport.on_load(:action_controller) do
       include DeviseSecurityExtension::Controllers::Helpers
     end
-    
-    ActionDispatch::Callbacks.to_prepare do
+
+    def self.activate
       DeviseSecurityExtension::Patches.apply
     end
 
+    config.to_prepare(&method(:activate).to_proc)
   end
 end

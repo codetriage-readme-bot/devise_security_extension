@@ -1,4 +1,5 @@
-class CreateTables < ActiveRecord::Migration
+# TODO: Inherit from the 5.0 Migration class directly when we drop support for Rails 4.
+class CreateTables < (ActiveRecord::Migration.respond_to?(:[]) ? ActiveRecord::Migration[5.0] : ActiveRecord::Migration )
   def self.up
     create_table :users do |t|
       t.string :username
@@ -15,7 +16,7 @@ class CreateTables < ActiveRecord::Migration
       t.string :encrypted_password
       t.string :password_salt
 
-      t.references :password_archivable, polymorphic: true
+      t.references :password_archivable, polymorphic: true, index: { name: :idx_1 }
     end
 
     create_table :devise_session_histories do |t|
@@ -25,14 +26,14 @@ class CreateTables < ActiveRecord::Migration
       t.datetime :last_accessed_at
       t.boolean :unique_auth_token_valid, default: true
 
-      t.references :session_traceable, polymorphic: true
+      t.references :session_traceable, polymorphic: true, index: { name: :idx_2 }
     end
 
     create_table :devise_session_limits do |t|
       t.string :unique_session_id, limit: 20
       t.datetime :last_accessed_at
 
-      t.references :session_limitable, polymorphic: true
+      t.references :session_limitable, polymorphic: true, index: { name: :idx_3 }
     end
   end
 

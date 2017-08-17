@@ -1,14 +1,20 @@
 unless defined?(DEVISE_ORM)
-  DEVISE_ORM = (ENV['DEVISE_ORM'] || :active_record).to_sym
+  DEVISE_ORM = (ENV["DEVISE_ORM"] || :active_record).to_sym
 end
 
-module DeviseSecurityExtension
-  # Detection for minor differences between Rails 3.2 and 4 in tests.
-  def self.rails4?
-    Rails.version.start_with? '4'
+module Devise
+  module Test
+    # Detection for minor differences between Rails 4 and 5, and 5.1 in tests.
+    def self.rails51?
+      Rails.version.start_with? '5.1'
+    end
+
+    def self.rails5?
+      Rails.version.start_with? '5'
+    end
   end
 end
 
 # Set up gems listed in the Gemfile.
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../../../Gemfile', __FILE__)
-require 'bundler/setup' if File.exists?(ENV['BUNDLE_GEMFILE'])
+require 'bundler/setup' if File.exist?(ENV['BUNDLE_GEMFILE'])
