@@ -7,6 +7,12 @@ class ActiveSupport::TestCase
     "test#{@@email_count}@example.com"
   end
 
+  def generate_ip_address
+    @@ip_count ||= 0
+    @@ip_count += 1
+    "192.168.1.#{@@ip_count}"
+  end
+
   def valid_attributes(attributes = {})
     { username: 'usertest',
       email: generate_unique_email,
@@ -53,6 +59,6 @@ class ActiveSupport::TestCase
   end
 
   def default_options
-    { ip_address: '192.168.1.220' }
+    @@default_options ||= { ip_address: generate_ip_address }
   end
 end

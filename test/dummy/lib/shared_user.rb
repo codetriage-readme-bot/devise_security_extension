@@ -3,6 +3,6 @@ module SharedUser
 
   included do
     devise :database_authenticatable, :registerable, :session_traceable, :session_limitable, :timeoutable,
-           :password_archivable, :password_expirable
+           :password_archivable, :password_expirable, :ip_authenticatable
   end
 end

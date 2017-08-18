@@ -36,6 +36,12 @@ class CreateTables < (ActiveRecord::Migration.respond_to?(:[]) ? ActiveRecord::M
 
       t.references :session_limitable, polymorphic: true, index: { name: :idx_3 }
     end
+
+    create_table :devise_authenticatable_ips do |t|
+      t.string :ip_address, null: false
+
+      t.references :owner, polymorphic: true, index: { name: :idx_4 }
+    end
   end
 
   def self.down
@@ -43,5 +49,6 @@ class CreateTables < (ActiveRecord::Migration.respond_to?(:[]) ? ActiveRecord::M
     drop_table :old_passwords
     drop_table :devise_session_histories
     drop_table :devise_session_limits
+    drop_table :devise_authenticatable_ips
   end
 end

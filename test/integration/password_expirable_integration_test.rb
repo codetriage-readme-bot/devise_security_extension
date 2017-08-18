@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class PasswordExpirableHookTest < ActionDispatch::IntegrationTest
+class PasswordExpirableIntegrationTest < ActionDispatch::IntegrationTest
   def password_expired
     @controller.user_session['password_expired']
   end

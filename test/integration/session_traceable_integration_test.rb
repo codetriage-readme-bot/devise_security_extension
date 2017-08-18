@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class SessionTraceableTest < ActionDispatch::IntegrationTest
+class SessionTraceableIntegrationTest < ActionDispatch::IntegrationTest
   def unique_auth_token_id
     @controller.user_session['unique_auth_token_id']
   end

@@ -85,6 +85,9 @@ module Devise
   mattr_accessor :paranoid_ip_verification
   @@paranoid_ip_verification = true
 
+  mattr_accessor :authenticatable_ip_class
+  @@authenticatable_ip_class = 'Devise::AuthenticatableIp'
+
   # The parent model all Devise models inherit from.
   # Defaults to ActionMailer::Base. This should be set early
   # in the initialization process and should be set to a string.
@@ -103,6 +106,8 @@ module DeviseSecurityExtension
 end
 
 # modules
+Devise.add_module :ip_authenticatable, model: 'devise_security_extension/models/ip_authenticatable',
+                  strategy: true, controller: :ip_authentications, route: { ip_authentications: %i(new) }
 Devise.add_module :password_expirable, controller: :password_expirable, model: 'devise_security_extension/models/password_expirable', route: :password_expired
 Devise.add_module :secure_validatable, model: 'devise_security_extension/models/secure_validatable'
 Devise.add_module :password_archivable, model: 'devise_security_extension/models/password_archivable'

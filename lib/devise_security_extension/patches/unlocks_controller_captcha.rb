@@ -1,21 +1,20 @@
+require 'devise_security_extension/controllers/recaptcha'
+
 module DeviseSecurityExtension
   module Patches
     module UnlocksControllerCaptcha
       extend ActiveSupport::Concern
+      include DeviseSecurityExtension::Controllers::Recaptcha
+
       included do
-        define_method :create do
-          if valid_captcha? params[:captcha]
-            self.resource = resource_class.send_unlock_instructions(params[resource_name])
-            if successfully_sent?(resource)
-              respond_with({}, location: new_session_path(resource_name))
-            else
-              respond_with(resource)
-            end
-          else
-            flash[:alert] = t('devise.invalid_captcha') if is_navigational_format?
-            respond_with({}, location: new_unlock_path(resource_name))
-          end
-        end
+        before_action :verify_captcha, only: :create
+        rescue_from ::Recaptcha::VerifyError, with: :invalid_captcha
+      end
+
+      private
+
+      def invalid_captcha
+        respond_with({}, location: new_unlock_path(resource_name)) && return
       end
     end
   end

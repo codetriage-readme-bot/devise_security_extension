@@ -1,7 +1,9 @@
+$LOAD_PATH.push File.expand_path('../lib', __FILE__)
 require 'rubygems'
 require 'bundler/setup'
 require 'rake/testtask'
 require 'rdoc/task'
+require 'devise_security_extension/version'
 
 desc 'Default: run tests for all ORMs.'
 task default: :test
@@ -15,11 +17,6 @@ Rake::TestTask.new(:test) do |t|
   t.warning = false
 end
 
-task default: :test
-
-require 'rdoc/task'
-$LOAD_PATH.push File.expand_path('../lib', __FILE__)
-require 'devise_security_extension/version'
 Rake::RDocTask.new do |rdoc|
   version = DeviseSecurityExtension::VERSION.dup
 

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class SessionLimitableTest < ActionDispatch::IntegrationTest
+class SessionLimitableIntegrationTest < ActionDispatch::IntegrationTest
   def unique_session_id
     @controller.user_session['unique_session_id']
   end

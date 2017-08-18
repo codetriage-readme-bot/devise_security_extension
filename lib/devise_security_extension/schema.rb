@@ -82,5 +82,22 @@ module DeviseSecurityExtension
       apply_devise_schema :session_traceable_type, String
       apply_devise_schema :session_traceable_id, Integer
     end
+
+    # Add authenticatable_ip columns in the resource's database table.
+    #
+    # Examples
+    #
+    # # For a new resource migration:
+    # create_table :the_resources do |t|
+    #   t.authenticatable_ip
+    # ...
+    # end
+    #
+    def authenticatable_ip
+      apply_devise_schema :ip_address, String
+
+      apply_devise_schema :owner_type, String
+      apply_devise_schema :owner_id, Integer
+    end
   end
 end
