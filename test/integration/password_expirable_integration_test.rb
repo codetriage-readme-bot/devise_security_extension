@@ -5,7 +5,7 @@ class PasswordExpirableIntegrationTest < ActionDispatch::IntegrationTest
     @controller.user_session['password_expired']
   end
 
-  test 'check if unique_session_id is set' do
+  test 'check if password_expired is set' do
     sign_in_as_user
     assert_not password_expired
   end
