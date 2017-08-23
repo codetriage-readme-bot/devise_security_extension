@@ -1,8 +1,8 @@
 module Devise
   class IpAuthenticationsController < ::DeviseController
-    prepend_before_action :require_no_authentication, only: :new
+    prepend_before_action :require_no_authentication, only: :show
 
-    def new
+    def show
       resource_for_remote_ip
       return redirect_to new_session_path(resource_name) unless resource
       yield resource if block_given?
