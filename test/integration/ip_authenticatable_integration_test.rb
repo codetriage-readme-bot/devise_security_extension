@@ -32,4 +32,15 @@ class IpAuthenticatableIntegrationTest < ActionDispatch::IntegrationTest
     click_button 'Log In'
     assert warden.authenticated?(:user)
   end
+
+  test 'redirect to ip auth when not authenticated' do
+    user = create_user
+    ip_address = generate_ip_address
+    user.class.authenticatable_ip_class.constantize.to_adapter.create!(owner: user, ip_address: ip_address)
+
+    stubs_with_ip(ip_address)
+
+    visit secret_data_path
+    assert_current_url user_ip_authentication_path
+  end
 end

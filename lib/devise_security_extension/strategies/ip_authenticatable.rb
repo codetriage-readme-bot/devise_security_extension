@@ -6,6 +6,17 @@ module Devise
     # Strategy for signing in a user, based on IP address in the database. It verifies user
     # request using reCAPTCHA.
     class IpAuthenticatable < ::Devise::Strategies::Authenticatable
+      module FailureApp
+        extend ActiveSupport::Concern
+
+        included do
+          def route(scope)
+            return :"new_#{scope}_session_url" unless scope_class.devise_modules.include?(:ip_authenticatable)
+            "#{scope}_ip_authentication_url"
+          end
+        end
+      end
+
       include Recaptcha::Verify
 
       def valid?
@@ -67,3 +78,4 @@ module Devise
 end
 
 Warden::Strategies.add(:ip_authenticatable, Devise::Strategies::IpAuthenticatable)
+Devise::FailureApp.send(:include, Devise::Strategies::IpAuthenticatable::FailureApp)
