@@ -26,15 +26,15 @@ class TestPasswordArchivable < ActiveSupport::TestCase
     assert_equal 2, User.password_archiving_count
 
     user = User.create password: 'password1', password_confirmation: 'password1'
-    assert_equal 0, OldPassword.count
+    assert_equal 0, Devise::OldPassword.count
 
     assert set_password(user, 'password2')
-    assert_equal 1, OldPassword.count
+    assert_equal 1, Devise::OldPassword.count
 
     assert_raises(ActiveRecord::RecordInvalid) { set_password(user, 'password1') }
 
     assert set_password(user, 'password3')
-    assert_equal 2, OldPassword.count
+    assert_equal 2, Devise::OldPassword.count
 
     # rotate first password out of archive
     assert set_password(user,  'password4')

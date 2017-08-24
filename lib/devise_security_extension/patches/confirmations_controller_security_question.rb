@@ -8,7 +8,8 @@ module DeviseSecurityExtension
           resource = resource_class.find_or_initialize_with_error_by(:email, params[resource_name][:email], :not_found)
 
           if valid_captcha?(params[:captcha]) ||
-             (resource.security_question_answer.present? && resource.security_question_answer == params[:security_question_answer])
+             (resource.security_question_answer.present? &&
+                 resource.security_question_answer == params[:security_question_answer])
             self.resource = resource_class.send_confirmation_instructions(params[resource_name])
 
             if successfully_sent?(resource)

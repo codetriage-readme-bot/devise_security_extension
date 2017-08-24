@@ -1,5 +1,4 @@
 require 'devise_security_extension/hooks/session_traceable'
-require 'devise_security_extension/models/session_history'
 
 module Devise
   module Models

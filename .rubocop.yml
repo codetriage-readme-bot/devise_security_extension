@@ -6,7 +6,7 @@ AllCops:
     - 'vendor/**/*'
     - 'bin/**/*'
     - 'test/fixtures/**/*'
-    - '**/spec/dummy/**/*'
+    - '**/test/dummy/**/*'
   # Makes it easier to find which cop is responsible for emitting the error
   DisplayCopNames: true
 
@@ -58,6 +58,17 @@ Style/RescueModifier:
 
 Style/Documentation:
   Enabled: false
+
+Style/ClassVars:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'test/**/*'
+
+Style/VariableNumber:
+  Exclude:
+    - 'test/**/*'
 
 ###################### Metrics ####################################
 

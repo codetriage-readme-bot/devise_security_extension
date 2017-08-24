@@ -2,22 +2,21 @@ module DeviseSecurityExtension
   module Generators
     # Install Generator
     class InstallGenerator < Rails::Generators::Base
-      LOCALES = %w(en de)
+      LOCALES = %w(en de).freeze
 
       source_root File.expand_path('../../templates', __FILE__)
       desc 'Install the devise security extension'
 
       def copy_initializer
         template('devise_security_extension.rb',
-                 'config/initializers/devise_security_extension.rb',
-        )
+                 'config/initializers/devise_security_extension.rb')
       end
 
       def copy_locales
         LOCALES.each do |locale|
           copy_file(
-              "../../../config/locales/#{locale}.yml",
-              "config/locales/devise.security_extension.#{locale}.yml",
+            "../../../config/locales/#{locale}.yml",
+            "config/locales/devise.security_extension.#{locale}.yml"
           )
         end
       end

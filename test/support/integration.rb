@@ -55,7 +55,7 @@ class ActionDispatch::IntegrationTest
     ip ||= generate_ip_address
     ActionDispatch::Request.any_instance.stubs(:remote_ip).returns(ip)
   end
-  alias_method :stubs_with_new_ip, :stubs_with_ip
+  alias stubs_with_new_ip stubs_with_ip
 
   protected
 

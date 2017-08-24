@@ -13,7 +13,7 @@ class CreateTables < (ActiveRecord::Migration.respond_to?(:[]) ? ActiveRecord::M
       t.timestamps(null: false)
     end
 
-    create_table :old_passwords do |t|
+    create_table :devise_old_passwords do |t|
       t.string :encrypted_password
       t.string :password_salt
 
@@ -46,7 +46,7 @@ class CreateTables < (ActiveRecord::Migration.respond_to?(:[]) ? ActiveRecord::M
 
   def self.down
     drop_table :users
-    drop_table :old_passwords
+    drop_table :devise_old_passwords
     drop_table :devise_session_histories
     drop_table :devise_session_limits
     drop_table :devise_authenticatable_ips

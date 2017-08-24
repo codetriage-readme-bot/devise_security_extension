@@ -49,5 +49,4 @@ module Devise
       self.resource = send("current_#{resource_name}")
     end
   end
-
 end

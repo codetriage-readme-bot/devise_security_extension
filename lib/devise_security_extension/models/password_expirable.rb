@@ -47,7 +47,8 @@ module Devise
 
       # is password changed then update password_cahanged_at
       def update_password_changed
-        self.password_changed_at = Time.now if (new_record? || encrypted_password_changed?) && !password_changed_at_changed?
+        self.password_changed_at = Time.current if (new_record? || encrypted_password_changed?) &&
+                                                   !password_changed_at_changed?
       end
 
       module ClassMethods
