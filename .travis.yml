@@ -35,6 +35,7 @@ matrix:
     - rvm: ruby-head
     - gemfile: gemfiles/rails_edge.gemfile
     - gemfile: gemfiles/rails_5.1_stable.gemfile
+    - gemfile: gemfiles/rails_4.1_stable.gemfile
 
 env:
   matrix:
