@@ -4,6 +4,6 @@ module Devise
 
     belongs_to :owner, polymorphic: true, required: true
 
-    validates :ip_address, presence: true, uniqueness: true
+    validates :ip_address, presence: true, uniqueness: { case_sensitive: false }
   end
 end
