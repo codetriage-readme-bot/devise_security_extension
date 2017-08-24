@@ -3,5 +3,7 @@ module Devise
     self.table_name = :devise_old_passwords
 
     belongs_to :password_archivable, polymorphic: true, required: true
+
+    validates :encrypted_password, presence: true
   end
 end

@@ -19,7 +19,7 @@ class Devise::PasswordExpiredControllerTest < ActionController::TestCase
   end
 
   test 'should update password' do
-    put :update, params: { user: {
+    put :update, { user: {
       current_password: '1234',
       password: '12345',
       password_confirmation: '12345'

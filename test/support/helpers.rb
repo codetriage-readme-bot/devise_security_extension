@@ -59,6 +59,6 @@ class ActiveSupport::TestCase
   end
 
   def default_options
-    @@default_options ||= { ip_address: generate_ip_address }
+    @@default_options ||= { ip_address: generate_ip_address, user_agent: 'UA' }
   end
 end

@@ -11,7 +11,7 @@ module Devise
       extend ActiveSupport::Concern
 
       included do
-        has_many :session_limits, as: :session_limitable,
+        has_many :session_limits, as: :session_limitable, inverse_of: :session_limitable,
                                   class_name: session_limitable_class, dependent: :destroy
       end
 

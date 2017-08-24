@@ -1,6 +1,10 @@
 require 'action_dispatch/testing/integration'
 
 class ActionDispatch::IntegrationTest
+  setup do
+    header('HTTP_USER_AGENT', 'UA')
+  end
+
   def warden
     request.env['warden']
   end
