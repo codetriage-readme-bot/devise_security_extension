@@ -37,6 +37,7 @@ class TraceableTest < ActiveSupport::TestCase
     token = user.log_traceable_request!(default_options)
 
     assert_not user.accept_traceable_token?(token)
+    assert user.accept_traceable_token?(token, ip_address: default_options[:ip_address])
   end
 
   test 'token should be accepted' do
@@ -50,6 +51,7 @@ class TraceableTest < ActiveSupport::TestCase
       user = create_user
       token = user.log_traceable_request!(default_options)
       assert user.accept_traceable_token?(token, ip_address: '0.0.0.0')
+      assert user.accept_traceable_token?(token)
     end
   end
 
