@@ -111,9 +111,10 @@ end
 # modules
 Devise.add_module :ip_authenticatable, model: 'devise_security_extension/models/ip_authenticatable',
                                        strategy: true, controller: :ip_authentications,
-                                       route: { ip_authentications: %i(new) }
+                                       route: :ip_authentication
 Devise.add_module :password_expirable, controller: :password_expirable,
-                                       model: 'devise_security_extension/models/password_expirable', route: :password_expired
+                                       model: 'devise_security_extension/models/password_expirable',
+                                       route: :password_expired
 Devise.add_module :secure_validatable, model: 'devise_security_extension/models/secure_validatable'
 Devise.add_module :password_archivable,
                   model: 'devise_security_extension/models/password_archivable'

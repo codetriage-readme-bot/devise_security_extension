@@ -9,8 +9,8 @@ module ActionDispatch::Routing
     end
 
     # route for handle ip authentication
-    def devise_ip_authentications(mapping, controllers)
-      resource :ip_authentication, only: %i(show), path: mapping.path_names[:ip_auth],
+    def devise_ip_authentication(mapping, controllers)
+      resource :ip_authentication, only: %i(show), path: mapping.path_names[:ip_authentication],
                                    controller: controllers[:ip_authentications]
     end
   end
