@@ -25,7 +25,9 @@ module Devise
 
       def authenticate!
         resource = remote_ip.present? && mapping.to.find_for_ip_authentication(authentication_hash, remote_ip)
-        if resource.active_for_ip_authentication? && validate(resource)
+        if resource.respond_to?(:active_for_ip_authentication?) &&
+           resource.active_for_ip_authentication? &&
+           validate(resource)
           resource.after_ip_authentication(remote_ip)
           session['ip_authentication'] = true
           success!(resource)
