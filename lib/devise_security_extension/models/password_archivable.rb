@@ -70,9 +70,7 @@ module Devise
       end
 
       def old_password_params
-        salt_change = if respond_to?(:password_salt_change) && !password_salt_change.nil?
-                        password_salt_change.first
-                      end
+        salt_change = (password_salt_change.first if respond_to?(:password_salt_change) && !password_salt_change.nil?)
         { encrypted_password: encrypted_password_change.first, password_salt: salt_change }
       end
 

@@ -103,9 +103,7 @@ module Devise
           # When +reject_session_on_limit+ is true, check for session that already timeout.
           # If exist, remove that session.
           session_limitable_adapter.find_all(opts).any? do |session|
-            if ((Time.current - timeout_session_in) <=> session.last_accessed_at) >= 0
-              expire_session_limit(session)
-            end
+            expire_session_limit(session) if ((Time.current - timeout_session_in) <=> session.last_accessed_at) >= 0
           end
         else
           # Remove oldest session if +reject_session_on_limit+ is false.

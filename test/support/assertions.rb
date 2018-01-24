@@ -15,9 +15,7 @@ class ActiveSupport::TestCase
 
   def assert_email_sent(address = nil, &block)
     assert_difference('ActionMailer::Base.deliveries.size', &block)
-    if address.present?
-      assert_equal address, ActionMailer::Base.deliveries.last['to'].to_s
-    end
+    assert_equal address, ActionMailer::Base.deliveries.last['to'].to_s if address.present?
   end
 
   def assert_email_not_sent(&block)

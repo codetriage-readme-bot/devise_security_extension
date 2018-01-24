@@ -21,7 +21,5 @@ end
 # Before each sign out, we remove ip authentication tag in the session.
 Warden::Manager.before_logout do |record, warden, options|
   session = warden.request.session["warden.user.#{options[:scope]}.session"]
-  if record && record.respond_to?(:valid_for_ip_authentication?) && session
-    session.delete('ip_authentication')
-  end
+  session.delete('ip_authentication') if record && record.respond_to?(:valid_for_ip_authentication?) && session
 end
